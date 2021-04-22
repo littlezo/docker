@@ -136,6 +136,7 @@ RUN dnf module reset php \
     && sed -i "s@memory_limit = 128M@memory_limit = 2048M@g" /etc/php.ini \
     && sed -i "2i swoole.use_shortname=off\nswoole.unixsock_buffer_size=32M" /etc/php.d/40-swoole.ini
 
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN  mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     && curl -O https://unit.nginx.org/download/unit-${UNIT_VERSION}.tar.gz \
     && tar xzf unit-${UNIT_VERSION}.tar.gz  \
@@ -161,20 +162,18 @@ RUN  mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     && make install \
     && make clean \
     && cd ../ \
-    && rm -rf unit-${UNIT_VERSION}
-
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY ./docker-entrypoint.d  /docker-entrypoint.d
-
-RUN set -x \
-   && php -v \
+    && rm -rf unit-${UNIT_VERSION} \
+    && set -x \
+    && php -v \
     && unitd --version\
-    && groupadd nginx \
-    && useradd nginx -g nginx -s /sbin/nologin -M \
+    && groupadd unit \
+    && useradd unit -g unit -s /sbin/nologin -M \
     && mkdir -p /var/lib/unit/ \
-    && mkdir /docker-entrypoint.d/ \
+    && mkdir -p /docker-entrypoint.d/ \
     && chmod u+x /usr/local/bin/docker-entrypoint.sh \
     && cd ${APP_ROOT}
+
+COPY ./docker-entrypoint.d  /docker-entrypoint.d
 
 STOPSIGNAL SIGQUIT
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

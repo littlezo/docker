@@ -60,9 +60,9 @@ EXPOSE  8080 \
 
 ENV NAME=php \
     APP_ROOT=/app-src \
-    PHP_VERSION=7.4 \
+    PHP_VERSION=8.0 \
     UNIT_VERSION=1.23.0 \
-    PHP_VER_SHORT=74 \
+    PHP_VER_SHORT=80 \
     PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:${APP_ROOT}:${APP_ROOT}/bin \
     SUMMARY="Platform for building and running PHP ${PHP_VERSION} applications" \
     DESCRIPTION="PHP ${PHP_VERSION} UNTI available as container is a base platform for \
