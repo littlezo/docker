@@ -1,0 +1,19 @@
+version: '3'
+services:
+    php-unit:
+        container_name: php-unit
+        image: littleof/php-unit:7.4
+        # env_file:
+        #     - .env
+        volumes:
+            - ./src/:/app-src/
+            - ./docker-entrypoint.d/:/docker-entrypoint.d/
+        ports:
+            - '8080:8080'
+        restart: always
+        networks:
+            - app_net
+networks:
+    app_net:
+        driver: bridge
+        # name: app-net
