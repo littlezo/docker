@@ -17,21 +17,21 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial \
     yum-utils \
     autoconf \
     automake \
-    bzip2  \
+    bzip2 \
     gcc \
     gcc-c++ \
     gd-devel \
     gdb \
     git \
     libcurl-devel \
-    libpq-devel  \
-    libxml2-devel  \
+    libpq-devel \
+    libxml2-devel \
     libxslt-devel \
     lsof \
     make \
     openssl-devel \
     patch \
-    procps-ng  \
+    procps-ng \
     redhat-rpm-config \
     unzip \
     wget \
@@ -39,21 +39,21 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial \
     openssl \
     mysql-devel \
     zlib-devel" \
-    &&  mkdir -p ${HOME}/.pki/nssdb \
-    &&  chown -R 1001:0 ${HOME}/.pki \
-    &&  yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \
-    &&  rpm -V $INSTALL_PKGS \
-    &&  rm -rf /var/cache/yum/* \
-    &&  yum repolist \
-    &&  yum -y clean all --enablerepo='*' \
-    &&  dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y\
-    &&  yum -y  upgrade --setopt=tsflags=nodocs --nogpgcheck \
-    &&  rm -rf /var/cache/yum/* \
-    &&  yum repolist \
-    &&  yum -y clean all --enablerepo='*'
+    && mkdir -p ${HOME}/.pki/nssdb \
+    && chown -R 1001:0 ${HOME}/.pki \
+    && yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \
+    && rpm -V $INSTALL_PKGS \
+    && rm -rf /var/cache/yum/* \
+    && yum repolist \
+    && yum -y clean all --enablerepo='*' \
+    && dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y\
+    && yum -y upgrade --setopt=tsflags=nodocs --nogpgcheck \
+    && rm -rf /var/cache/yum/* \
+    && yum repolist \
+    && yum -y clean all --enablerepo='*'
 
 #此镜像提供了一个PHP环境，可用于运行PHP 应用程序。
-EXPOSE  8080 \
+EXPOSE 8080 \
     8443 \
     9443 \
     9501
@@ -99,32 +99,26 @@ WORKDIR ${APP_ROOT}
 RUN dnf module reset php \
     && dnf module enable php:remi-${PHP_VERSION} -y \
     && dnf install pkgconfig -y\
-    && INSTALL_PKGS="php-gd php-xhprof php-ast php-cli php-dba \
-    php-dbg php-pdo php-xml php-imap php-intl php-json \
-    php-ldap php-snmp php-soap php-tidy php-devel \
-    php-bcmath php-brotli php-common php-recode php-sodium \
-    php-xmlrpc php-enchant php-libvirt php-mysqlnd php-pecl-ds \
-    php-pecl-ev php-process php-embedded php-mbstring \
-    php-pecl-dio php-pecl-eio php-pecl-env php-pecl-lzf \
-    php-pecl-nsq php-pecl-psr php-pecl-zip php-pecl-zmq \
-    php-componere php-pecl-grpc php-pecl-http php-pecl-ssh2 \
-    php-pecl-sync php-pecl-uuid php-pecl-vips \
-    php-pecl-yaml php-phpiredis php-wkhtmltox php-pecl-event \
-    php-pecl-geoip php-pecl-gnupg php-pecl-mysql php-pecl-oauth \
-    php-pecl-stats php-pecl-xattr php-pecl-xxtea php-pecl-base58 \
-    php-pecl-hrtime php-pecl-mcrypt php-pecl-pdflib \
-    php-pecl-propro php-pecl-redis php-pecl-decimal \
-    php-pecl-xmldiff php-pecl-igbinary php-pecl-mogilefs \
-    php-pecl-json-post php-pecl-ip2location \
-    php-pecl-http-message php-bcmath php-cli php-common php-dba \
-    php-dbg php-gd php-gmp php-intl php-json php-ldap \
-    php-mbstring php-mysqlnd php-pdo php-process php-pecl-apcu \
-    php-recode php-soap php-xml php-zip php-pecl-redis php-swoole \
-    php-xmlrpc  php-devel"  \
-    && yum install -y libstdc++ openssl pcre-devel pcre2-devel openssl-devel supervisor unzip zlib-devel git wget \
+    && INSTALL_PKGS="php-gd php-xhprof php-ast php-cli php-dba php-dbg php-pdo \
+    php-xml php-imap php-intl php-json php-ldap php-snmp php-soap \
+    php-tidy php-devel php-bcmath php-brotli php-common php-recode \
+    php-sodium php-xmlrpc php-enchant php-libvirt php-mysqlnd \
+    php-pecl-ds php-pecl-ev php-process php-embedded php-mbstring \
+    php-pecl-dio php-pecl-eio php-pecl-env php-pecl-lzf php-pecl-nsq \
+    php-pecl-psr php-pecl-zip php-pecl-zmq php-componere php-pecl-grpc \
+    php-pecl-http php-pecl-ssh2 php-pecl-sync php-pecl-uuid \
+    php-pecl-vips php-pecl-yaml php-phpiredis php-wkhtmltox \
+    php-pecl-event php-pecl-geoip php-pecl-gnupg php-pecl-mysql \
+    php-pecl-oauth php-pecl-stats php-pecl-xattr php-pecl-xxtea \
+    php-pecl-base58 php-pecl-hrtime php-pecl-mcrypt php-pecl-pdflib \
+    php-pecl-propro php-pecl-redis php-pecl-decimal php-pecl-xmldiff \
+    php-pecl-igbinary php-pecl-mogilefs php-pecl-json-post \
+    php-pecl-ip2location php-pecl-http-message php-gmp php-pecl-apcu \
+    php-zip php-swoole" \
+    && yum install -y libstdc++ openssl pcre-devel pcre2-devel openssl-devel supervisor \
     $INSTALL_PKGS --skip-broken --setopt=tsflags=nodocs --nogpgcheck\
-    && rm -rf /var/cache/yum/*  \
-    && yum repolist  \
+    && rm -rf /var/cache/yum/* \
+    && yum repolist \
     && yum -y clean all --enablerepo='*' \
     && wget -O /usr/local/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod a+x /usr/local/bin/composer \
@@ -136,12 +130,12 @@ RUN dnf module reset php \
     && sed -i "s@memory_limit = 128M@memory_limit = 2048M@g" /etc/php.ini \
     && sed -i "2i swoole.use_shortname=off\nswoole.unixsock_buffer_size=32M" /etc/php.d/40-swoole.ini
 
-RUN  mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
+RUN mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     && curl -O https://unit.nginx.org/download/unit-${UNIT_VERSION}.tar.gz \
-    && tar xzf unit-${UNIT_VERSION}.tar.gz  \
-    && rm -rf unit-${UNIT_VERSION}.tar.gz  \
+    && tar xzf unit-${UNIT_VERSION}.tar.gz \
+    && rm -rf unit-${UNIT_VERSION}.tar.gz \
     && cd unit-${UNIT_VERSION} \
-    &&  ./configure --prefix=/usr \
+    && ./configure --prefix=/usr \
     --state=/var/lib/unit \
     --control=unix:/var/run/control.unit.sock \
     --pid=/var/run/unit.pid \
@@ -164,7 +158,7 @@ RUN  mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     && rm -rf unit-${UNIT_VERSION}
 
 COPY docker-entrypoint.sh /usr/local/bin/
-COPY ./docker-entrypoint.d  /docker-entrypoint.d
+COPY ./docker-entrypoint.d /docker-entrypoint.d
 
 RUN set -x \
     && php -v \
