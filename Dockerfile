@@ -1,8 +1,8 @@
 FROM centos:8
 
 # 初始化镜像
-RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial \
-    && INSTALL_PKGS="bsdtar \
+RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial && \
+    INSTALL_PKGS="bsdtar \
     findutils \
     gettext \
     groff-base \
@@ -38,19 +38,18 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial \
     which \
     openssl \
     mysql-devel \
-    zlib-devel" \
-    && mkdir -p ${HOME}/.pki/nssdb \
-    && chown -R 1001:0 ${HOME}/.pki \
-    && yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \
-    && rpm -V $INSTALL_PKGS \
-    && rm -rf /var/cache/yum/* \
-    && yum repolist \
-    && yum -y clean all --enablerepo='*' \
-    && dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y\
-    && yum -y upgrade --setopt=tsflags=nodocs --nogpgcheck \
-    && rm -rf /var/cache/yum/* \
-    && yum repolist \
-    && yum -y clean all --enablerepo='*'
+    zlib-devel" && \
+    mkdir -p "${HOME}"/.pki/nssdb && \
+    chown -R 1001:0 "${HOME}"/.pki && \
+    yum install -y $INSTALL_PKGS --setopt=tsflags=nodocs --nogpgcheck && \
+    rm -rf /var/cache/yum/* && \
+    yum repolist && \
+    yum -y clean all --enablerepo='*' && \
+    dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y && \
+    yum -y upgrade --setopt=tsflags=nodocs --nogpgcheck && \
+    rm -rf /var/cache/yum/* && \
+    yum repolist && \
+    yum -y clean all --enablerepo='*'
 
 #此镜像提供了一个PHP环境，可用于运行PHP 应用程序。
 EXPOSE 8080 \
@@ -82,10 +81,10 @@ LABEL summary="$SUMMARY" \
     description="$DESCRIPTION" \
     com.xjoycloud.description="$DESCRIPTION" \
     com.xjoycloud.display-name="PHP ${PHP_VERSION} unit" \
-    com.xjoycloud.expose-services=" \:http" \
+    com.xjoycloud.expose-services="8080:http" \
     com.xjoycloud.expose-services="8443:https" \
-    com.xjoycloud.socket.expose-services="9443:websocket" \
     com.xjoycloud.tcp.expose-services="9501:tcp" \
+    com.xjoycloud.socket.expose-services="9443:websocket" \
     com.xjoycloud.tags="builder,${NAME},${NAME}-${PHP_VERSION},unit,${NAME}-unit" \
     com.xjoycloud.dev-mode="${DEV_MODE}:false" \
     com.xjoycloud.deployments-dir="${APP_ROOT}" \
@@ -96,10 +95,10 @@ LABEL summary="$SUMMARY" \
 # 项目目录
 WORKDIR ${APP_ROOT}
 # 安装 环境
-RUN dnf module reset php \
-    && dnf module enable php:remi-${PHP_VERSION} -y \
-    && dnf install pkgconfig -y\
-    && INSTALL_PKGS="php-gd php-xhprof php-ast php-cli php-dba php-dbg php-pdo \
+RUN dnf module reset php && \
+    dnf module enable php:remi-${PHP_VERSION} -y && \
+    dnf install pkgconfig -y && \
+    INSTALL_PKGS="php-gd php-xhprof php-ast php-cli php-dba php-dbg php-pdo \
     php-xml php-imap php-intl php-json php-ldap php-snmp php-soap \
     php-tidy php-devel php-bcmath php-brotli php-common php-recode \
     php-sodium php-xmlrpc php-enchant php-libvirt php-mysqlnd \
@@ -114,28 +113,26 @@ RUN dnf module reset php \
     php-pecl-propro php-pecl-redis php-pecl-decimal php-pecl-xmldiff \
     php-pecl-igbinary php-pecl-mogilefs php-pecl-json-post \
     php-pecl-ip2location php-pecl-http-message php-gmp php-pecl-apcu \
-    php-zip php-swoole" \
-    && yum install -y libstdc++ openssl pcre-devel pcre2-devel openssl-devel supervisor \
-    $INSTALL_PKGS --skip-broken --setopt=tsflags=nodocs --nogpgcheck\
-    && rm -rf /var/cache/yum/* \
-    && yum repolist \
-    && yum -y clean all --enablerepo='*' \
-    && wget -O /usr/local/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
-    && chmod a+x /usr/local/bin/composer \
-    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/\
-    && sed -i "s@;date.timezone =@date.timezone = Asia/Shanghai@g" /etc/php.ini \
-    && sed -i "s@max_execution_time = 30@max_execution_time = 300@g" /etc/php.ini \
-    && sed -i "s@post_max_size = 8M@post_max_size = 32M@g" /etc/php.ini \
-    && sed -i "s@max_input_time = 60@max_input_time = 600@g" /etc/php.ini \
-    && sed -i "s@memory_limit = 128M@memory_limit = 2048M@g" /etc/php.ini \
-    && sed -i "2i swoole.use_shortname=off\nswoole.unixsock_buffer_size=32M" /etc/php.d/40-swoole.ini
-
-RUN mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
-    && curl -O https://unit.nginx.org/download/unit-${UNIT_VERSION}.tar.gz \
-    && tar xzf unit-${UNIT_VERSION}.tar.gz \
-    && rm -rf unit-${UNIT_VERSION}.tar.gz \
-    && cd unit-${UNIT_VERSION} \
-    && ./configure --prefix=/usr \
+    php-zip php-swoole" && \
+    yum install -y libstdc++ openssl pcre-devel pcre2-devel openssl-devel supervisor \
+    $INSTALL_PKGS --skip-broken --setopt=tsflags=nodocs --nogpgcheck && \
+    rm -rf /var/cache/yum/* && \
+    yum repolist && \
+    yum -y clean all --enablerepo='*' && \
+    wget -O /usr/local/bin/composer https://mirrors.aliyun.com/composer/composer.phar && \
+    chmod a+x /usr/local/bin/composer && \
+    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ && sed -i "s@;date.timezone =@date.timezone = Asia/Shanghai@g" /etc/php.ini && \
+    sed -i "s@max_execution_time = 30@max_execution_time = 300@g" /etc/php.ini && \
+    sed -i "s@post_max_size = 8M@post_max_size = 32M@g" /etc/php.ini && \
+    sed -i "s@max_input_time = 60@max_input_time = 600@g" /etc/php.ini && \
+    sed -i "s@memory_limit = 128M@memory_limit = 2048M@g" /etc/php.ini && \
+    sed -i "2i swoole.use_shortname=off\nswoole.unixsock_buffer_size=32M" /etc/php.d/40-swoole.ini
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN curl -O https://unit.nginx.org/download/unit-"${UNIT_VERSION}".tar.gz && \
+    tar xzf unit-${UNIT_VERSION}.tar.gz && \
+    rm -rf unit-${UNIT_VERSION}.tar.gz && \
+    cd unit-${UNIT_VERSION} && \
+    ./configure --prefix=/usr \
     --state=/var/lib/unit \
     --control=unix:/var/run/control.unit.sock \
     --pid=/var/run/unit.pid \
@@ -144,32 +141,30 @@ RUN mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     --user=unit \
     --group=unit \
     --openssl \
-    --modules=/usr/lib/unit/modules \
-    && make \
-    && make install \
-    && ./configure php \
+    --modules=/usr/lib/unit/modules && \
+    make && \
+    make install && \
+    ./configure php \
     --module=php \
     --config=/usr/bin/php-config \
-    --lib-path=/usr/lib64/ \
-    && make \
-    && make install \
-    && make clean \
-    && cd ../ \
-    && rm -rf unit-${UNIT_VERSION}
-
-COPY docker-entrypoint.sh /usr/local/bin/
+    --lib-path=/usr/lib64/ && \
+    make && \
+    make install && \
+    make clean && \
+    rm -rf ../unit-${UNIT_VERSION} && \
+    set -x && \
+    groupadd unit && \
+    useradd unit -g unit -s /sbin/nologin -M && \
+    mkdir -p /usr/lib/unit/modules && \
+    mkdir -p /usr/lib/unit/debug-modules && \
+    php -v && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    unitd --version && \
+    mkdir -p /var/lib/unit/ && \
+    mkdir -p /docker-entrypoint.d/ && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    cd ${APP_ROOT}
 COPY ./docker-entrypoint.d /docker-entrypoint.d
-
-RUN set -x \
-    && php -v \
-    && unitd --version\
-    && groupadd unit \
-    && useradd unit -g unit -s /sbin/nologin -M \
-    && mkdir -p /var/lib/unit/ \
-    && mkdir -p /docker-entrypoint.d/ \
-    && chmod u+x /usr/local/bin/docker-entrypoint.sh \
-    && cd ${APP_ROOT}
-
 STOPSIGNAL SIGQUIT
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["unitd", "--no-daemon", "--control", "127.0.0.1:8233"]
