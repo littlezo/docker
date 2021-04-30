@@ -7,7 +7,7 @@ services:
         env_file: .env
         volumes:
             - ./src/:/app-src/
-            - ./docker-entrypoint.d/:/docker-entrypoint.d/
+            - ./entrypoint.d/:/entrypoint.d/
         ports:
             - '8080:8080'
         restart: always

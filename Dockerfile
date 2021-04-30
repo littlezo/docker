@@ -127,7 +127,7 @@ RUN dnf module reset php && \
     sed -i "s@max_input_time = 60@max_input_time = 600@g" /etc/php.ini && \
     sed -i "s@memory_limit = 128M@memory_limit = 2048M@g" /etc/php.ini && \
     sed -i "2i swoole.use_shortname=off\nswoole.unixsock_buffer_size=32M" /etc/php.d/40-swoole.ini
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
 RUN curl -O https://unit.nginx.org/download/unit-"${UNIT_VERSION}".tar.gz && \
     tar xzf unit-${UNIT_VERSION}.tar.gz && \
     rm -rf unit-${UNIT_VERSION}.tar.gz && \
@@ -158,13 +158,13 @@ RUN curl -O https://unit.nginx.org/download/unit-"${UNIT_VERSION}".tar.gz && \
     mkdir -p /usr/lib/unit/modules && \
     mkdir -p /usr/lib/unit/debug-modules && \
     php -v && \
-    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh && \
     unitd --version && \
     mkdir -p /var/lib/unit/ && \
-    mkdir -p /docker-entrypoint.d/ && \
-    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    mkdir -p /entrypoint.d/ && \
+    chmod +x /usr/local/bin/entrypoint.sh && \
     cd ${APP_ROOT}
-COPY ./docker-entrypoint.d /docker-entrypoint.d
+COPY ./entrypoint.d /entrypoint.d
 STOPSIGNAL SIGQUIT
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["unitd", "--no-daemon", "--control", "127.0.0.1:8233"]
