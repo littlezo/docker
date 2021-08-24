@@ -113,7 +113,7 @@ RUN dnf module reset php && \
     php-pecl-propro php-pecl-redis php-pecl-decimal php-pecl-xmldiff \
     php-pecl-igbinary php-pecl-mogilefs php-pecl-json-post \
     php-pecl-ip2location php-pecl-http-message php-gmp php-pecl-apcu \
-    php-zip php-swoole" && \
+    php-zip php-swoole php-pthreads" && \
     yum install -y libstdc++ openssl pcre-devel pcre2-devel openssl-devel supervisor \
     $INSTALL_PKGS --skip-broken --setopt=tsflags=nodocs --nogpgcheck && \
     rm -rf /var/cache/yum/* && \
