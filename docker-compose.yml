@@ -3,7 +3,7 @@ services:
     php-unit:
         build: .
         container_name: php-unit
-        image: littleof/php-unit:7.4
+        image: littleof/centos-php-zts-unit:latest
         env_file: .env
         volumes:
             - ./src/:/app-src/
