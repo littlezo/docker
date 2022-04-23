@@ -1,0 +1,54 @@
+{
+    "settings": {
+        "http": {
+            "header_read_timeout": 10,
+            "body_read_timeout": 600,
+            "send_timeout": 3600,
+            "idle_timeout": 120,
+            "max_body_size": 5368709120
+        }
+    },
+    "listeners": {
+        "*:8080": {
+            "pass": "routes/api"
+        }
+    },
+    "routes": {
+        "api": [
+            {
+                "match": {
+                    "uri": ["*.php", "*.php/*", "/public/"]
+                },
+
+                "action": {
+                    "pass": "applications/api/direct"
+                }
+            },
+            {
+                "action": {
+                    "share": "/app-src/public/",
+                    "fallback": {
+                        "pass": "applications/api/index"
+                    }
+                }
+            }
+        ]
+    },
+    "applications": {
+        "api": {
+            "type": "php",
+            "user": "unit",
+            "group": "unit",
+            "targets": {
+                "direct": {
+                    "root": "/app-src/public/"
+                },
+                "index": {
+                    "root": "/app-src/public/",
+                    "script": "index.php"
+                }
+            }
+        }
+    },
+    "access_log": "/var/log/access.log"
+}
